@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>愛心魔術方塊</title>
   <style>
     body {
@@ -23,7 +23,6 @@
       background: red;
       transform: rotate(45deg);
       animation: fall 20s linear infinite;
-      border-radius: 3px;
     }
 
     .heart::before,
@@ -85,31 +84,30 @@
       pointer-events: none;
     }
 
-    /* 立方體面原本位置 */
-    .front  { transform: rotateY(0deg) translateZ(100px); }
+    .front  { transform: rotateY(  0deg) translateZ(100px); }
     .back   { transform: rotateY(180deg) translateZ(100px); }
-    .right  { transform: rotateY(90deg) translateZ(100px); }
+    .right  { transform: rotateY( 90deg) translateZ(100px); }
     .left   { transform: rotateY(-90deg) translateZ(100px); }
-    .top    { transform: rotateX(90deg) translateZ(100px); }
+    .top    { transform: rotateX( 90deg) translateZ(100px); }
     .bottom { transform: rotateX(-90deg) translateZ(100px); }
-
-    /* 分散後位置 */
-    .face.exploded.front  { transform: translateX(-250px) translateY(-150px) rotateY(0deg) translateZ(0); }
-    .face.exploded.back   { transform: translateX(250px) translateY(-150px) rotateY(180deg) translateZ(0); }
-    .face.exploded.right  { transform: translateX(250px) translateY(150px) rotateY(90deg) translateZ(0); }
-    .face.exploded.left   { transform: translateX(-250px) translateY(150px) rotateY(-90deg) translateZ(0); }
-    .face.exploded.top    { transform: translateX(0) translateY(-300px) rotateX(90deg) translateZ(0); }
-    .face.exploded.bottom { transform: translateX(0) translateY(300px) rotateX(-90deg) translateZ(0); }
-
-    /* 停止旋轉動畫時 */
-    .scene.exploded {
-      animation-play-state: paused;
-    }
 
     @keyframes rotateCube {
       from { transform: rotateX(0deg) rotateY(0deg); }
       to { transform: rotateX(360deg) rotateY(360deg); }
     }
+
+    /* 分散狀態 */
+    .scene.exploded {
+      animation: none !important;
+    }
+
+    .face.exploded.front  { transform: translateX(-250px) translateZ(0); }
+    .face.exploded.back   { transform: translateX(250px) translateZ(0); }
+    .face.exploded.right  { transform: translateZ(250px); }
+    .face.exploded.left   { transform: translateZ(-250px); }
+    .face.exploded.top    { transform: translateY(-250px); }
+    .face.exploded.bottom { transform: translateY(250px); }
+
   </style>
 </head>
 <body>
@@ -128,48 +126,51 @@
   </script>
 
   <!-- 立方體 -->
- <div class="scene" id="cube">
-  <div class="face front" data-url="https://www.instagram.com/yllcc20?igsh=Z2V6NmY2ZGJpc25k">
-    <img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg" alt="Front" />
+  <div class="scene">
+    <div class="face front"  data-url="https://www.instagram.com/yllcc20?igsh=Z2V6NmY2ZGJpc25k">
+      <img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg" alt="Front" />
+    </div>
+    <div class="face back"   data-url="https://www.instagram.com/linjia0220?igsh=MWxjcXB3aHp2OTU4dQ==">
+      <img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg" alt="Back" />
+    </div>
+    <div class="face right"  data-url="https://www.youtube.com/watch?v=M_Pr2HDv2e0&ab_channel=4KMusicMake">
+      <img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg" alt="Right" />
+    </div>
+    <div class="face left"   data-url="https://www.youtube.com/watch?v=wi-iK-787hM&ab_channel=%E8%A7%92%E9%A0%ADGATAOMOVIE">
+      <img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg" alt="Left" />
+    </div>
+    <div class="face top"    data-url="https://www.youtube.com/watch?v=8AgMBZGSMNY&list=RD8AgMBZGSMNY&start_radio=1&ab_channel=AngelicMusicWorld">
+      <img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg" alt="Top" />
+    </div>
+    <div class="face bottom" data-url="https://www.youtube.com/watch?v=tyGqoSQw6_Q&ab_channel=Muse%E6%9C%A8%E6%A3%89%E8%8A%B1-TW">
+      <img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg" alt="Bottom" />
+    </div>
   </div>
-  <div class="face back" data-url="https://www.instagram.com/linjia0220?igsh=MWxjcXB3aHp2OTU4dQ==">
-    <img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg" alt="Back" />
-  </div>
-  <div class="face right" data-url="https://www.youtube.com/watch?v=M_Pr2HDv2e0&ab_channel=4KMusicMake">
-    <img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg" alt="Right" />
-  </div>
-  <div class="face left" data-url="https://www.youtube.com/watch?v=wi-iK-787hM&ab_channel=%E8%A7%92%E9%A0%ADGATAOMOVIE">
-    <img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg" alt="Left" />
-  </div>
-  <div class="face top" data-url="https://www.youtube.com/watch?v=8AgMBZGSMNY&list=RD8AgMBZGSMNY&start_radio=1&ab_channel=AngelicMusicWorld">
-    <img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg" alt="Top" />
-  </div>
-  <div class="face bottom" data-url="https://www.youtube.com/watch?v=tyGqoSQw6_Q&ab_channel=Muse%E6%9C%A8%E6%A3%89%E8%8A%B1-TW">
-    <img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg" alt="Bottom" />
-  </div>
-</div>
 
-<script>
-  const cube = document.getElementById('cube');
-  const faces = cube.querySelectorAll('.face');
-  let exploded = false;
+  <script>
+    const cube = document.querySelector('.scene');
+    const faces = cube.querySelectorAll('.face');
+    let exploded = false;
 
-  faces.forEach(face => {
-    face.addEventListener('click', (e) => {
-      e.stopPropagation();
+    faces.forEach(face => {
+      face.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
 
-      if (!exploded) {
-        // 第一次點擊，分散動畫
-        exploded = true;
-        cube.classList.add('exploded');
-        faces.forEach(f => f.classList.add('exploded'));
-      } else {
-        // 分散狀態，點擊跳轉
-        const url = face.getAttribute('data-url');
-        if (url) {
-          window.location.href = url;
+        if (!exploded) {
+          exploded = true;
+          cube.classList.add('exploded');
+          faces.forEach(f => f.classList.add('exploded'));
+        } else {
+          // 第二次點擊跳轉
+          const url = face.dataset.url;
+          if (url) {
+            window.location.href = url;
+          }
         }
-      }
+      });
     });
-  });
-</script>
+  </script>
+
+</body>
+</html>
