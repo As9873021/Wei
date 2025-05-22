@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>愛心魔術方塊</title>
   <style>
     body {
@@ -72,7 +72,7 @@
       position: absolute;
       width: 200px;
       height: 200px;
-      backface-visibility: visible;
+      backface-visibility: hidden;
       transition: transform 1s ease;
     }
 
@@ -81,10 +81,9 @@
       height: 100%;
       object-fit: cover;
       user-select: none;
-      pointer-events: none; /* 避免圖片阻擋點擊事件 */
+      pointer-events: none;
     }
 
-    /* 初始六面位置 */
     .front  { transform: rotateY(0deg) translateZ(100px); }
     .back   { transform: rotateY(180deg) translateZ(100px); }
     .right  { transform: rotateY(90deg) translateZ(100px); }
@@ -92,30 +91,29 @@
     .top    { transform: rotateX(90deg) translateZ(100px); }
     .bottom { transform: rotateX(-90deg) translateZ(100px); }
 
-    /* 旋轉動畫 */
     @keyframes rotateCube {
       from { transform: rotateX(0deg) rotateY(0deg); }
       to { transform: rotateX(360deg) rotateY(360deg); }
     }
 
-    /* 展開後，六面往不同方向移動 */
+    /* 分散展開後 六面都正面朝前 並移動位置 */
     .face.exploded.front  {
       transform: rotateY(0deg) translateZ(100px) translateX(-120px);
     }
     .face.exploded.back   {
-      transform: rotateY(180deg) translateZ(100px) translateX(120px);
+      transform: rotateY(0deg) translateZ(100px) translateX(120px);
     }
     .face.exploded.right  {
-      transform: rotateY(90deg) translateZ(100px) translateY(-120px);
+      transform: rotateY(0deg) translateZ(100px) translateY(-120px);
     }
     .face.exploded.left   {
-      transform: rotateY(-90deg) translateZ(100px) translateY(120px);
+      transform: rotateY(0deg) translateZ(100px) translateY(120px);
     }
     .face.exploded.top    {
-      transform: rotateX(90deg) translateZ(100px) translateZ(120px);
+      transform: rotateY(0deg) translateZ(100px) translateZ(120px);
     }
     .face.exploded.bottom {
-      transform: rotateX(-90deg) translateZ(100px) translateZ(-120px);
+      transform: rotateY(0deg) translateZ(100px) translateZ(-120px);
     }
   </style>
 </head>
@@ -135,70 +133,59 @@
   </script>
 
   <!-- 立方體 -->
-  <div class="scene" title="點擊分散/合併方塊">
-    <div class="face front">
+  <div class="scene" id="cube">
+    <div class="face front" data-link="https://www.instagram.com/yllcc20?igsh=Z2V6NmY2ZGJpc25k">
       <img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg" alt="Front" />
     </div>
-    <div class="face back">
+    <div class="face back" data-link="https://www.instagram.com/linjia0220?igsh=MWxjcXB3aHp2OTU4dQ==">
       <img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg" alt="Back" />
     </div>
-    <div class="face right">
+    <div class="face right" data-link="https://www.youtube.com/watch?v=M_Pr2HDv2e0&ab_channel=4KMusicMake">
       <img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg" alt="Right" />
     </div>
-    <div class="face left">
+    <div class="face left" data-link="https://www.youtube.com/watch?v=wi-iK-787hM&ab_channel=%E8%A7%92%E9%A0%ADGATAOMOVIE">
       <img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg" alt="Left" />
     </div>
-    <div class="face top">
+    <div class="face top" data-link="https://www.youtube.com/watch?v=8AgMBZGSMNY&list=RD8AgMBZGSMNY&start_radio=1&ab_channel=AngelicMusicWorld">
       <img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg" alt="Top" />
     </div>
-    <div class="face bottom">
+    <div class="face bottom" data-link="https://www.youtube.com/watch?v=tyGqoSQw6_Q&ab_channel=Muse%E6%9C%A8%E6%A3%89%E8%8A%B1-TW">
       <img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg" alt="Bottom" />
     </div>
   </div>
 
   <script>
-    const scene = document.querySelector('.scene');
-    const faces = document.querySelectorAll('.face');
+    const cube = document.getElementById('cube');
+    let exploded = false;  // 判斷目前是正常旋轉還是分散狀態
 
-    // 預設每個面對應的點擊網址
-    const links = {
-      front: 'https://www.instagram.com/yllcc20?igsh=Z2V6NmY2ZGJpc25k',
-      back: 'https://www.instagram.com/linjia0220?igsh=MWxjcXB3aHp2OTU4dQ==',
-      right: 'https://www.youtube.com/watch?v=M_Pr2HDv2e0&ab_channel=4KMusicMake',
-      left: 'https://www.youtube.com/watch?v=wi-iK-787hM&ab_channel=%E8%A7%92%E9%A0%ADGATAOMOVIE',
-      top: 'https://www.youtube.com/watch?v=8AgMBZGSMNY&list=RD8AgMBZGSMNY&start_radio=1&ab_channel=AngelicMusicWorld',
-      bottom: 'https://www.youtube.com/watch?v=tyGqoSQw6_Q&ab_channel=Muse%E6%9C%A8%E6%A3%89%E8%8A%B1-TW'
-    };
-
-    // 狀態：是否展開
-    let exploded = false;
-
-    scene.addEventListener('click', (e) => {
-      // 點擊大方塊時切換展開收合
-      if (e.target === scene || e.target.classList.contains('face') || e.target.tagName === 'IMG') {
-        exploded = !exploded;
-        faces.forEach(face => {
-          if (exploded) {
-            face.classList.add('exploded');
-          } else {
-            face.classList.remove('exploded');
-          }
-        });
-      }
-    });
-
-    // 點擊圖片跳轉網址（只有展開時才跳轉）
-    faces.forEach(face => {
+    // 綁定所有面的點擊事件，實現先分散，再點擊跳轉
+    cube.querySelectorAll('.face').forEach(face => {
       face.addEventListener('click', (e) => {
-        e.stopPropagation(); // 防止事件冒泡造成展開切換
-        if (exploded) {
-          const cls = Array.from(face.classList).find(c => c !== 'face' && c !== 'exploded');
-          if (cls && links[cls]) {
-            window.open(links[cls], '_blank');
+        e.stopPropagation(); // 防止事件冒泡干擾
+        if (!exploded) {
+          // 分散動作
+          exploded = true;
+          cube.style.animationPlayState = 'paused';  // 停止旋轉
+          cube.querySelectorAll('.face').forEach(f => f.classList.add('exploded'));
+        } else {
+          // 分散狀態下，點擊直接跳轉到該面鏈接
+          const link = face.getAttribute('data-link');
+          if (link) {
+            window.open(link, '_blank');
           }
         }
       });
     });
+
+    // 點擊場景空白區域收回立方體，恢復旋轉
+    document.body.addEventListener('click', () => {
+      if (exploded) {
+        exploded = false;
+        cube.style.animationPlayState = 'running'; // 恢復旋轉
+        cube.querySelectorAll('.face').forEach(f => f.classList.remove('exploded'));
+      }
+    });
   </script>
 </body>
 </html>
+
