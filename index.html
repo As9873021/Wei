@@ -96,17 +96,18 @@
       to { transform: rotateX(360deg) rotateY(360deg); }
     }
 
-    /* 分散狀態 */
-    .scene.exploded {
-      animation: none !important;
-    }
+   /* 分散狀態 */
+.scene.exploded {
+  animation: none !important;
+}
 
-    .face.exploded.front  { transform: translateX(-250px) translateZ(0); }
-    .face.exploded.back   { transform: translateX(250px) translateZ(0); }
-    .face.exploded.right  { transform: translateZ(250px); }
-    .face.exploded.left   { transform: translateZ(-250px); }
-    .face.exploded.top    { transform: translateY(-250px); }
-    .face.exploded.bottom { transform: translateY(250px); }
+.face.exploded.front  { transform: translateX(-150px) translateZ(0); }
+.face.exploded.back   { transform: translateX(150px) translateZ(0); }
+.face.exploded.right  { transform: translateZ(150px); }
+.face.exploded.left   { transform: translateZ(-150px); }
+.face.exploded.top    { transform: translateY(-150px); }
+.face.exploded.bottom { transform: translateY(150px); }
+
 
   </style>
 </head>
