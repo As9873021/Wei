@@ -23,6 +23,7 @@
       background: red;
       transform: rotate(45deg);
       animation: fall 20s linear infinite;
+      border-radius: 3px;
     }
 
     .heart::before,
@@ -47,23 +48,25 @@
 
     @keyframes fall {
       0% {
-    transform: translateY(-50px) translateX(0) rotate(45deg);
-    opacity: 1;
-  }
-  50% {
-    transform: translateY(50vh) translateX(20px) rotate(45deg);
-  }
-  100% {
-    transform: translateY(100vh) translateX(0) rotate(45deg);
-    opacity: 0;
-  }
-}
+        transform: translateY(-50px) translateX(0) rotate(45deg);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(50vh) translateX(20px) rotate(45deg);
+      }
+      100% {
+        transform: translateY(100vh) translateX(0) rotate(45deg);
+        opacity: 0;
+      }
+    }
+
     .scene {
       width: 200px;
       height: 200px;
       position: relative;
       transform-style: preserve-3d;
       animation: rotateCube 10s infinite linear;
+      cursor: pointer;
     }
 
     .face {
@@ -71,20 +74,37 @@
       width: 200px;
       height: 200px;
       backface-visibility: hidden;
+      transition: transform 1s ease;
     }
 
     .face img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      user-select: none;
+      pointer-events: none;
     }
 
-    .front  { transform: rotateY(  0deg) translateZ(100px); }
+    /* 立方體面原本位置 */
+    .front  { transform: rotateY(0deg) translateZ(100px); }
     .back   { transform: rotateY(180deg) translateZ(100px); }
-    .right  { transform: rotateY( 90deg) translateZ(100px); }
+    .right  { transform: rotateY(90deg) translateZ(100px); }
     .left   { transform: rotateY(-90deg) translateZ(100px); }
-    .top    { transform: rotateX( 90deg) translateZ(100px); }
+    .top    { transform: rotateX(90deg) translateZ(100px); }
     .bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+    /* 分散後位置 */
+    .face.exploded.front  { transform: translateX(-250px) translateY(-150px) rotateY(0deg) translateZ(0); }
+    .face.exploded.back   { transform: translateX(250px) translateY(-150px) rotateY(180deg) translateZ(0); }
+    .face.exploded.right  { transform: translateX(250px) translateY(150px) rotateY(90deg) translateZ(0); }
+    .face.exploded.left   { transform: translateX(-250px) translateY(150px) rotateY(-90deg) translateZ(0); }
+    .face.exploded.top    { transform: translateX(0) translateY(-300px) rotateX(90deg) translateZ(0); }
+    .face.exploded.bottom { transform: translateX(0) translateY(300px) rotateX(-90deg) translateZ(0); }
+
+    /* 停止旋轉動畫時 */
+    .scene.exploded {
+      animation-play-state: paused;
+    }
 
     @keyframes rotateCube {
       from { transform: rotateX(0deg) rotateY(0deg); }
@@ -101,34 +121,55 @@
       heart.classList.add('heart');
       heart.style.left = Math.random() * 100 + 'vw';
       heart.style.animationDuration = (Math.random() * 10 + 10) + 's';  // 10~20秒
-      heart.style.opacity = Math.random() * 0.5 + 0.5).toFixed(2);
+      heart.style.opacity = (Math.random() * 0.5 + 0.5).toFixed(2);
       heart.style.transform = 'scale(' + (Math.random() + 0.5) + ') rotate(45deg)';
       document.body.appendChild(heart);
     }
   </script>
 
   <!-- 立方體 -->
-  <div class="scene">
-  <div class="face front" onclick="window.location.href='https://www.instagram.com/yllcc20?igsh=Z2V6NmY2ZGJpc25k'">
-    <img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg" alt="Front" />
+  <div class="scene" id="cube">
+    <div class="face front" onclick="window.location.href='https://www.instagram.com/yllcc20?igsh=Z2V6NmY2ZGJpc25k'">
+      <img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg" alt="Front" />
+    </div>
+    <div class="face back" onclick="window.location.href='https://www.instagram.com/linjia0220?igsh=MWxjcXB3aHp2OTU4dQ=='">
+      <img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg" alt="Back" />
+    </div>
+    <div class="face right" onclick="window.location.href='https://www.youtube.com/watch?v=M_Pr2HDv2e0&ab_channel=4KMusicMake'">
+      <img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg" alt="Right" />
+    </div>
+    <div class="face left" onclick="window.location.href='https://www.youtube.com/watch?v=wi-iK-787hM&ab_channel=%E8%A7%92%E9%A0%ADGATAOMOVIE'">
+      <img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg" alt="Left" />
+    </div>
+    <div class="face top" onclick="window.location.href='https://www.youtube.com/watch?v=8AgMBZGSMNY&list=RD8AgMBZGSMNY&start_radio=1&ab_channel=AngelicMusicWorld'">
+      <img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg" alt="Top" />
+    </div>
+    <div class="face bottom" onclick="window.location.href='https://www.youtube.com/watch?v=tyGqoSQw6_Q&ab_channel=Muse%E6%9C%A8%E6%A3%89%E8%8A%B1-TW'">
+      <img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg" alt="Bottom" />
+    </div>
   </div>
-  <div class="face back" onclick="window.location.href='https://www.instagram.com/linjia0220?igsh=MWxjcXB3aHp2OTU4dQ=='">
-    <img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg" alt="Back" />
-  </div>
-  <div class="face right" onclick="window.location.href='https://www.youtube.com/watch?v=M_Pr2HDv2e0&ab_channel=4KMusicMake'">
-    <img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg" alt="Right" />
-  </div>
-  <div class="face left" onclick="window.location.href='https://www.youtube.com/watch?v=wi-iK-787hM&ab_channel=%E8%A7%92%E9%A0%ADGATAOMOVIE'">
-    <img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg" alt="Left" />
-  </div>
-  <div class="face top" onclick="window.location.href='https://www.youtube.com/watch?v=8AgMBZGSMNY&list=RD8AgMBZGSMNY&start_radio=1&ab_channel=AngelicMusicWorld'">
-    <img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg" alt="Top" />
-  </div>
-  <div class="face bottom" onclick="window.location.href='https://www.youtube.com/watch?v=tyGqoSQw6_Q&ab_channel=Muse%E6%9C%A8%E6%A3%89%E8%8A%B1-TW'">
-    <img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg" alt="Bottom" />
-  </div>
-</div>
 
- </script>
+  <script>
+    const cube = document.getElementById('cube');
+    const faces = cube.querySelectorAll('.face');
+    let exploded = false;
+
+    faces.forEach(face => {
+      face.addEventListener('click', (e) => {
+        e.stopPropagation(); // 防止事件冒泡
+        exploded = !exploded;
+        cube.classList.toggle('exploded', exploded);
+
+        faces.forEach(f => {
+          if (exploded) {
+            f.classList.add('exploded');
+          } else {
+            f.classList.remove('exploded');
+          }
+        });
+      });
+    });
+  </script>
+
 </body>
 </html>
