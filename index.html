@@ -72,7 +72,7 @@
       position: absolute;
       width: 200px;
       height: 200px;
-      backface-visibility: hidden;
+      backface-visibility: visible;
       transition: transform 1s ease;
     }
 
@@ -81,34 +81,42 @@
       height: 100%;
       object-fit: cover;
       user-select: none;
-      pointer-events: none;
+      pointer-events: none; /* 避免圖片阻擋點擊事件 */
     }
 
-    .front  { transform: rotateY(  0deg) translateZ(100px); }
+    /* 初始六面位置 */
+    .front  { transform: rotateY(0deg) translateZ(100px); }
     .back   { transform: rotateY(180deg) translateZ(100px); }
-    .right  { transform: rotateY( 90deg) translateZ(100px); }
+    .right  { transform: rotateY(90deg) translateZ(100px); }
     .left   { transform: rotateY(-90deg) translateZ(100px); }
-    .top    { transform: rotateX( 90deg) translateZ(100px); }
+    .top    { transform: rotateX(90deg) translateZ(100px); }
     .bottom { transform: rotateX(-90deg) translateZ(100px); }
 
+    /* 旋轉動畫 */
     @keyframes rotateCube {
       from { transform: rotateX(0deg) rotateY(0deg); }
       to { transform: rotateX(360deg) rotateY(360deg); }
     }
 
-   /* 分散狀態 */
-.scene.exploded {
-  animation: none !important;
-}
-
-.face.exploded.front  { transform: translateX(-150px) translateZ(0); }
-.face.exploded.back   { transform: translateX(150px) translateZ(0); }
-.face.exploded.right  { transform: translateZ(150px); }
-.face.exploded.left   { transform: translateZ(-150px); }
-.face.exploded.top    { transform: translateY(-150px); }
-.face.exploded.bottom { transform: translateY(150px); }
-
-
+    /* 展開後，六面往不同方向移動 */
+    .face.exploded.front  {
+      transform: rotateY(0deg) translateZ(100px) translateX(-120px);
+    }
+    .face.exploded.back   {
+      transform: rotateY(180deg) translateZ(100px) translateX(120px);
+    }
+    .face.exploded.right  {
+      transform: rotateY(90deg) translateZ(100px) translateY(-120px);
+    }
+    .face.exploded.left   {
+      transform: rotateY(-90deg) translateZ(100px) translateY(120px);
+    }
+    .face.exploded.top    {
+      transform: rotateX(90deg) translateZ(100px) translateZ(120px);
+    }
+    .face.exploded.bottom {
+      transform: rotateX(-90deg) translateZ(100px) translateZ(-120px);
+    }
   </style>
 </head>
 <body>
@@ -127,51 +135,70 @@
   </script>
 
   <!-- 立方體 -->
-  <div class="scene">
-    <div class="face front"  data-url="https://www.instagram.com/yllcc20?igsh=Z2V6NmY2ZGJpc25k">
+  <div class="scene" title="點擊分散/合併方塊">
+    <div class="face front">
       <img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg" alt="Front" />
     </div>
-    <div class="face back"   data-url="https://www.instagram.com/linjia0220?igsh=MWxjcXB3aHp2OTU4dQ==">
+    <div class="face back">
       <img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg" alt="Back" />
     </div>
-    <div class="face right"  data-url="https://www.youtube.com/watch?v=M_Pr2HDv2e0&ab_channel=4KMusicMake">
+    <div class="face right">
       <img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg" alt="Right" />
     </div>
-    <div class="face left"   data-url="https://www.youtube.com/watch?v=wi-iK-787hM&ab_channel=%E8%A7%92%E9%A0%ADGATAOMOVIE">
+    <div class="face left">
       <img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg" alt="Left" />
     </div>
-    <div class="face top"    data-url="https://www.youtube.com/watch?v=8AgMBZGSMNY&list=RD8AgMBZGSMNY&start_radio=1&ab_channel=AngelicMusicWorld">
+    <div class="face top">
       <img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg" alt="Top" />
     </div>
-    <div class="face bottom" data-url="https://www.youtube.com/watch?v=tyGqoSQw6_Q&ab_channel=Muse%E6%9C%A8%E6%A3%89%E8%8A%B1-TW">
+    <div class="face bottom">
       <img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg" alt="Bottom" />
     </div>
   </div>
 
   <script>
-    const cube = document.querySelector('.scene');
-    const faces = cube.querySelectorAll('.face');
+    const scene = document.querySelector('.scene');
+    const faces = document.querySelectorAll('.face');
+
+    // 預設每個面對應的點擊網址
+    const links = {
+      front: 'https://www.instagram.com/yllcc20?igsh=Z2V6NmY2ZGJpc25k',
+      back: 'https://www.instagram.com/linjia0220?igsh=MWxjcXB3aHp2OTU4dQ==',
+      right: 'https://www.youtube.com/watch?v=M_Pr2HDv2e0&ab_channel=4KMusicMake',
+      left: 'https://www.youtube.com/watch?v=wi-iK-787hM&ab_channel=%E8%A7%92%E9%A0%ADGATAOMOVIE',
+      top: 'https://www.youtube.com/watch?v=8AgMBZGSMNY&list=RD8AgMBZGSMNY&start_radio=1&ab_channel=AngelicMusicWorld',
+      bottom: 'https://www.youtube.com/watch?v=tyGqoSQw6_Q&ab_channel=Muse%E6%9C%A8%E6%A3%89%E8%8A%B1-TW'
+    };
+
+    // 狀態：是否展開
     let exploded = false;
 
-    faces.forEach(face => {
-      face.addEventListener('click', e => {
-        e.preventDefault();
-        e.stopPropagation();
+    scene.addEventListener('click', (e) => {
+      // 點擊大方塊時切換展開收合
+      if (e.target === scene || e.target.classList.contains('face') || e.target.tagName === 'IMG') {
+        exploded = !exploded;
+        faces.forEach(face => {
+          if (exploded) {
+            face.classList.add('exploded');
+          } else {
+            face.classList.remove('exploded');
+          }
+        });
+      }
+    });
 
-        if (!exploded) {
-          exploded = true;
-          cube.classList.add('exploded');
-          faces.forEach(f => f.classList.add('exploded'));
-        } else {
-          // 第二次點擊跳轉
-          const url = face.dataset.url;
-          if (url) {
-            window.location.href = url;
+    // 點擊圖片跳轉網址（只有展開時才跳轉）
+    faces.forEach(face => {
+      face.addEventListener('click', (e) => {
+        e.stopPropagation(); // 防止事件冒泡造成展開切換
+        if (exploded) {
+          const cls = Array.from(face.classList).find(c => c !== 'face' && c !== 'exploded');
+          if (cls && links[cls]) {
+            window.open(links[cls], '_blank');
           }
         }
       });
     });
   </script>
-
 </body>
 </html>
