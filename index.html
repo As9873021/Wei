@@ -35,8 +35,15 @@
       border-radius: 50%;
     }
 
-    .heart::before { top: -7.5px; left: 0; }
-    .heart::after { left: -7.5px; top: 0; }
+    .heart::before {
+      top: -7.5px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -7.5px;
+      top: 0;
+    }
 
     @keyframes fall {
       0% {
@@ -61,120 +68,27 @@
       cursor: pointer;
     }
 
+    .scene.exploded {
+      animation: none;
+    }
+
     .face {
       position: absolute;
       width: 200px;
       height: 200px;
       backface-visibility: hidden;
-      transition: transform 1s ease;
+      transition: transform 0.6s ease, opacity 0.6s;
     }
 
     .face img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      user-select: none;
-      pointer-events: none;
     }
 
-    /* 六面立方體的原始定位 */
-    .front  { transform: rotateY(0deg) translateZ(100px); }
+    .front  { transform: rotateY(  0deg) translateZ(100px); }
     .back   { transform: rotateY(180deg) translateZ(100px); }
-    .right  { transform: rotateY(90deg) translateZ(100px); }
+    .right  { transform: rotateY( 90deg) translateZ(100px); }
     .left   { transform: rotateY(-90deg) translateZ(100px); }
-    .top    { transform: rotateX(90deg) translateZ(100px); }
-    .bottom { transform: rotateX(-90deg) translateZ(100px); }
-
-    @keyframes rotateCube {
-      from { transform: rotateX(0deg) rotateY(0deg); }
-      to   { transform: rotateX(360deg) rotateY(360deg); }
-    }
-
-    /* 分散狀態：取消原始旋轉角度 + 六面展開 */
-    .face.exploded.front  {
-      transform: rotateY(0deg) translate3d(-220px, 0, 0);
-    }
-    .face.exploded.back   {
-      transform: rotateY(0deg) translate3d(220px, 0, 0);
-    }
-    .face.exploded.right  {
-      transform: rotateY(0deg) translate3d(0, -220px, 0);
-    }
-    .face.exploded.left   {
-      transform: rotateY(0deg) translate3d(0, 220px, 0);
-    }
-    .face.exploded.top    {
-      transform: rotateY(0deg) translate3d(0, 0, 220px);
-    }
-    .face.exploded.bottom {
-      transform: rotateY(0deg) translate3d(0, 0, -220px);
-    }
-  </style>
-</head>
-<body>
-
-  <!-- 愛心流星 -->
-  <script>
-    for (let i = 0; i < 30; i++) {
-      let heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.style.left = Math.random() * 100 + 'vw';
-      heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
-      heart.style.opacity = (Math.random() * 0.5 + 0.5).toFixed(2);
-      heart.style.transform = 'scale(' + (Math.random() + 0.5) + ') rotate(45deg)';
-      document.body.appendChild(heart);
-    }
-  </script>
-
-  <!-- 魔術方塊 -->
-  <div class="scene" id="cube">
-    <div class="face front" data-link="https://www.instagram.com/yllcc20?igsh=Z2V6NmY2ZGJpc25k">
-      <img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg" />
-    </div>
-    <div class="face back" data-link="https://www.instagram.com/linjia0220?igsh=MWxjcXB3aHp2OTU4dQ==">
-      <img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg" />
-    </div>
-    <div class="face right" data-link="https://www.youtube.com/watch?v=M_Pr2HDv2e0">
-      <img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg" />
-    </div>
-    <div class="face left" data-link="https://www.youtube.com/watch?v=wi-iK-787hM">
-      <img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg" />
-    </div>
-    <div class="face top" data-link="https://www.youtube.com/watch?v=8AgMBZGSMNY">
-      <img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg" />
-    </div>
-    <div class="face bottom" data-link="https://www.youtube.com/watch?v=tyGqoSQw6_Q">
-      <img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg" />
-    </div>
-  </div>
-
-  <!-- 控制互動 -->
-  <script>
-    const cube = document.getElementById('cube');
-    let exploded = false;
-
-    cube.querySelectorAll('.face').forEach(face => {
-      face.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (!exploded) {
-          exploded = true;
-          cube.style.animationPlayState = 'paused';
-          cube.querySelectorAll('.face').forEach(f => f.classList.add('exploded'));
-        } else {
-          const link = face.getAttribute('data-link');
-          if (link) window.open(link, '_blank');
-        }
-      });
-    });
-
-    document.body.addEventListener('click', () => {
-      if (exploded) {
-        exploded = false;
-        cube.style.animationPlayState = 'running';
-        cube.querySelectorAll('.face').forEach(f => f.classList.remove('exploded'));
-      }
-    });
-  </script>
-</body>
-</html>
-
+    .top    { transform: rotateX( 90deg) translateZ(100px); }
+    .bottom { transform: rotateX(-90deg) translateZ(100px);
