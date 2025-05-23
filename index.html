@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>愛心魔術方塊</title>
   <style>
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
       overflow: hidden;
@@ -14,46 +16,7 @@
       justify-content: center;
       align-items: center;
       perspective: 1000px;
-    }
-
-    .sun {
-      position: absolute;
-      top: 30px;
-      left: 30px;
-      width: 80px;
-      height: 80px;
-      background: radial-gradient(circle, #fffac1, #fcd95d);
-      border-radius: 50%;
-      box-shadow: 0 0 30px #ffe567;
-      z-index: -1;
-    }
-
-    .cloud {
-      position: absolute;
-      top: 100px;
-      left: 100px;
-      width: 120px;
-      height: 60px;
-      background: #fff;
-      border-radius: 60px;
-      box-shadow: 40px 0px 0px #fff, 80px 0px 0px #fff;
-      opacity: 0.8;
-      animation: cloudMove 30s linear infinite;
-      z-index: -1;
-    }
-
-    @keyframes cloudMove {
-      from { left: -200px; }
-      to { left: 120vw; }
-    }
-
-    .garden {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 100px;
-      background: linear-gradient(to top, #6dba6d 0%, transparent 100%);
-      z-index: -1;
+      font-family: sans-serif;
     }
 
     .heart {
@@ -63,7 +26,6 @@
       background: red;
       transform: rotate(45deg);
       animation: fall 5s linear infinite;
-      z-index: -2;
     }
 
     .heart::before,
@@ -76,25 +38,12 @@
       border-radius: 50%;
     }
 
-    .heart::before {
-      top: -7.5px;
-      left: 0;
-    }
-
-    .heart::after {
-      left: -7.5px;
-      top: 0;
-    }
+    .heart::before { top: -7.5px; left: 0; }
+    .heart::after { left: -7.5px; top: 0; }
 
     @keyframes fall {
-      0% {
-        transform: translateY(-50px) rotate(45deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(45deg);
-        opacity: 0;
-      }
+      0% { transform: translateY(-50px) rotate(45deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
     }
 
     .scene {
@@ -102,8 +51,8 @@
       height: 200px;
       position: relative;
       transform-style: preserve-3d;
-      animation: rotateCube 12s infinite linear;
-      z-index: 1;
+      animation: rotateCube 10s infinite linear;
+      cursor: pointer;
     }
 
     .face {
@@ -111,7 +60,6 @@
       width: 200px;
       height: 200px;
       backface-visibility: hidden;
-      cursor: pointer;
     }
 
     .face img {
@@ -132,61 +80,57 @@
       to { transform: rotateX(360deg) rotateY(360deg); }
     }
 
-    .slider-container {
-      display: none;
-      position: absolute;
+    .album {
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 80vw;
-      height: 60vh;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.3);
-      z-index: 10;
-      overflow: hidden;
-    }
-
-    .slider {
-      display: flex;
-      transition: transform 0.5s ease;
-      height: 100%;
+      background: white;
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 1000;
+      transition: all 0.3s ease;
     }
 
     .slide {
-      flex: 0 0 100%;
+      display: none;
     }
 
     .slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      max-width: 90vw;
+      max-height: 80vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin: auto;
     }
 
-    .arrow {
+    .nav-button {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 2rem;
-      background: rgba(255,255,255,0.8);
+      font-size: 24px;
+      background: rgba(0,0,0,0.5);
+      color: white;
       border: none;
+      padding: 10px;
       cursor: pointer;
-      z-index: 15;
+      z-index: 1001;
     }
 
-    .left-arrow { left: 10px; }
-    .right-arrow { right: 10px; }
+    .prev { left: -50px; }
+    .next { right: -50px; }
   </style>
 </head>
 <body>
 
-<div class="sun"></div>
-<div class="cloud"></div>
-<div class="garden"></div>
-
+<!-- 愛心流星背景 -->
 <script>
   for (let i = 0; i < 30; i++) {
-    let heart = document.createElement('div');
+    const heart = document.createElement('div');
     heart.classList.add('heart');
     heart.style.left = Math.random() * 100 + 'vw';
     heart.style.animationDuration = (Math.random() * 5 + 3) + 's';
@@ -196,56 +140,68 @@
   }
 </script>
 
-<!-- 立方體 -->
-<div class="scene">
-  <div class="face front" onclick="openSlider(0)"><img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg" /></div>
-  <div class="face back" onclick="openSlider(1)"><img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg" /></div>
-  <div class="face right" onclick="openSlider(2)"><img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg" /></div>
-  <div class="face left" onclick="openSlider(3)"><img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg" /></div>
-  <div class="face top" onclick="openSlider(4)"><img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg" /></div>
-  <div class="face bottom" onclick="openSlider(5)"><img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg" /></div>
+<!-- 旋轉立方體 -->
+<div class="scene" onclick="openAlbum()">
+  <div class="face front"><img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg" /></div>
+  <div class="face back"><img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg" /></div>
+  <div class="face right"><img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg" /></div>
+  <div class="face left"><img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg" /></div>
+  <div class="face top"><img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg" /></div>
+  <div class="face bottom"><img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg" /></div>
 </div>
 
-<!-- 圖片滑動視窗 -->
-<div class="slider-container" id="sliderContainer">
-  <button class="arrow left-arrow" onclick="prevSlide()">‹</button>
-  <div class="slider" id="slider">
-    <div class="slide"><img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg" /></div>
-    <div class="slide"><img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg" /></div>
-    <div class="slide"><img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg" /></div>
-    <div class="slide"><img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg" /></div>
-    <div class="slide"><img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg" /></div>
-    <div class="slide"><img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg" /></div>
-  </div>
-  <button class="arrow right-arrow" onclick="nextSlide()">›</button>
+<!-- 相簿視窗 -->
+<div id="album" class="album">
+  <div class="slide"><img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg"></div>
+  <div class="slide"><img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg"></div>
+  <div class="slide"><img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg"></div>
+  <div class="slide"><img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg"></div>
+  <div class="slide"><img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg"></div>
+  <div class="slide"><img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg"></div>
+  <button class="nav-button prev" onclick="changeSlide(-1)">←</button>
+  <button class="nav-button next" onclick="changeSlide(1)">→</button>
 </div>
 
 <script>
-  let currentIndex = 0;
+  let currentSlide = 0;
 
-  function openSlider(index) {
-    // 刪除背景動畫元素
-    document.querySelectorAll('.sun, .cloud, .heart, .garden').forEach(el => el.remove());
-
-    // 顯示滑動圖片視窗
-    document.getElementById('sliderContainer').style.display = 'block';
-    currentIndex = index;
-    updateSlider();
+  function openAlbum() {
+    document.querySelector('.scene').style.display = 'none'; // 隱藏方塊
+    document.getElementById('album').style.display = 'block';
+    showSlide(0);
   }
 
-  function updateSlider() {
-    const slider = document.getElementById('slider');
-    slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+  function showSlide(index) {
+    const slides = document.querySelectorAll('.slide');
+    if (index < 0) index = slides.length - 1;
+    if (index >= slides.length) index = 0;
+    currentSlide = index;
+
+    slides.forEach((slide, i) => {
+      slide.style.display = i === currentSlide ? 'block' : 'none';
+    });
+
+    const img = slides[currentSlide].querySelector('img');
+    if (img.complete) {
+      resizeAlbumToImage(img);
+    } else {
+      img.onload = () => resizeAlbumToImage(img);
+    }
   }
 
-  function nextSlide() {
-    currentIndex = (currentIndex + 1) % 6;
-    updateSlider();
+  function changeSlide(step) {
+    showSlide(currentSlide + step);
   }
 
-  function prevSlide() {
-    currentIndex = (currentIndex - 1 + 6) % 6;
-    updateSlider();
+  function resizeAlbumToImage(img) {
+    const album = document.getElementById('album');
+    const width = img.naturalWidth;
+    const height = img.naturalHeight;
+    const maxWidth = window.innerWidth * 0.9;
+    const maxHeight = window.innerHeight * 0.8;
+    const scale = Math.min(maxWidth / width, maxHeight / height, 1);
+    album.style.width = width * scale + 'px';
+    album.style.height = height * scale + 'px';
   }
 </script>
 
