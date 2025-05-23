@@ -150,60 +150,60 @@
   <div class="face bottom"><img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg" /></div>
 </div>
 
-<!-- 相簿視窗 -->
-<div id="album" class="album">
-  <div class="slide"><img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg"></div>
-  <div class="slide"><img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg"></div>
-  <div class="slide"><img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg"></div>
-  <div class="slide"><img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg"></div>
-  <div class="slide"><img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg"></div>
-  <div class="slide"><img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg"></div>
-  <button class="nav-button prev" onclick="changeSlide(-1)">←</button>
-  <button class="nav-button next" onclick="changeSlide(1)">→</button>
+<!-- 改版相簿 -->
+<div id="album" class="album" style="display: none;">
+  <div class="album-container">
+    <div class="slide"><img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg"></div>
+    <div class="slide"><img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg"></div>
+  </div>
 </div>
 
-<script>
-  let currentSlide = 0;
+<style>
+  .album {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #fff;
+    z-index: 1000;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
+  .album-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    height: 100%;
+  }
+
+  .slide {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    scroll-snap-align: center;
+    padding: 10px;
+  }
+
+  .slide img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+  }
+</style>
+
+<script>
   function openAlbum() {
     document.querySelector('.scene').style.display = 'none'; // 隱藏方塊
-    document.getElementById('album').style.display = 'block';
-    showSlide(0);
-  }
-
-  function showSlide(index) {
-    const slides = document.querySelectorAll('.slide');
-    if (index < 0) index = slides.length - 1;
-    if (index >= slides.length) index = 0;
-    currentSlide = index;
-
-    slides.forEach((slide, i) => {
-      slide.style.display = i === currentSlide ? 'block' : 'none';
-    });
-
-    const img = slides[currentSlide].querySelector('img');
-    if (img.complete) {
-      resizeAlbumToImage(img);
-    } else {
-      img.onload = () => resizeAlbumToImage(img);
-    }
-  }
-
-  function changeSlide(step) {
-    showSlide(currentSlide + step);
-  }
-
-  function resizeAlbumToImage(img) {
-    const album = document.getElementById('album');
-    const width = img.naturalWidth;
-    const height = img.naturalHeight;
-    const maxWidth = window.innerWidth * 0.9;
-    const maxHeight = window.innerHeight * 0.8;
-    const scale = Math.min(maxWidth / width, maxHeight / height, 1);
-    album.style.width = width * scale + 'px';
-    album.style.height = height * scale + 'px';
+    document.getElementById('album').style.display = 'flex';
   }
 </script>
-
-</body>
-</html>
