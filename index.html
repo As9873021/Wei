@@ -2,11 +2,10 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>愛心魔術方塊</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>浪漫魔術方塊</title>
   <style>
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       overflow: hidden;
@@ -19,6 +18,7 @@
       font-family: sans-serif;
     }
 
+    /* 愛心流星動畫 */
     .heart {
       position: absolute;
       width: 15px;
@@ -27,7 +27,6 @@
       transform: rotate(45deg);
       animation: fall 5s linear infinite;
     }
-
     .heart::before,
     .heart::after {
       content: '';
@@ -37,15 +36,14 @@
       background: red;
       border-radius: 50%;
     }
-
     .heart::before { top: -7.5px; left: 0; }
-    .heart::after { left: -7.5px; top: 0; }
-
+    .heart::after  { top: 0; left: -7.5px; }
     @keyframes fall {
       0% { transform: translateY(-50px) rotate(45deg); opacity: 1; }
       100% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
     }
 
+    /* 魔術方塊 */
     .scene {
       width: 200px;
       height: 200px;
@@ -53,21 +51,17 @@
       transform-style: preserve-3d;
       animation: rotateCube 10s infinite linear;
       cursor: pointer;
+      z-index: 10;
     }
-
     .face {
       position: absolute;
       width: 200px;
       height: 200px;
       backface-visibility: hidden;
     }
-
     .face img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      width: 100%; height: 100%; object-fit: cover;
     }
-
     .front  { transform: rotateY(  0deg) translateZ(100px); }
     .back   { transform: rotateY(180deg) translateZ(100px); }
     .right  { transform: rotateY( 90deg) translateZ(100px); }
@@ -77,133 +71,86 @@
 
     @keyframes rotateCube {
       from { transform: rotateX(0deg) rotateY(0deg); }
-      to { transform: rotateX(360deg) rotateY(360deg); }
+      to   { transform: rotateX(360deg) rotateY(360deg); }
     }
 
+    /* 相簿樣式 */
     .album {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 10px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #fff;
+      z-index: 100;
+      overflow: hidden;
       display: none;
-      z-index: 1000;
-      transition: all 0.3s ease;
+      justify-content: center;
+      align-items: center;
     }
-
+    .album-container {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      width: 100%; height: 100%;
+    }
     .slide {
-      display: none;
-    }
-
-    .slide img {
-      max-width: 90vw;
-      max-height: 80vh;
-      width: auto;
-      height: auto;
-      object-fit: contain;
-      display: block;
-      margin: auto;
-    }
-
-    .nav-button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 24px;
-      background: rgba(0,0,0,0.5);
-      color: white;
-      border: none;
+      flex: 0 0 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      scroll-snap-align: center;
       padding: 10px;
-      cursor: pointer;
-      z-index: 1001;
     }
-
-    .prev { left: -50px; }
-    .next { right: -50px; }
+    .slide img {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+    }
   </style>
 </head>
 <body>
+  <!-- 愛心流星背景 -->
+  <script>
+    for (let i = 0; i < 30; i++) {
+      let heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (Math.random() * 5 + 3) + 's';
+      heart.style.opacity = Math.random();
+      heart.style.transform = 'scale(' + (Math.random() + 0.5) + ') rotate(45deg)';
+      document.body.appendChild(heart);
+    }
+  </script>
 
-<!-- 愛心流星背景 -->
-<script>
-  for (let i = 0; i < 30; i++) {
-    const heart = document.createElement('div');
-    heart.classList.add('heart');
-    heart.style.left = Math.random() * 100 + 'vw';
-    heart.style.animationDuration = (Math.random() * 5 + 3) + 's';
-    heart.style.opacity = Math.random();
-    heart.style.transform = 'scale(' + (Math.random() + 0.5) + ') rotate(45deg)';
-    document.body.appendChild(heart);
-  }
-</script>
-
-<!-- 旋轉立方體 -->
-<div class="scene" onclick="openAlbum()">
-  <div class="face front"><img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg" /></div>
-  <div class="face back"><img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg" /></div>
-  <div class="face right"><img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg" /></div>
-  <div class="face left"><img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg" /></div>
-  <div class="face top"><img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg" /></div>
-  <div class="face bottom"><img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg" /></div>
-</div>
-
-<!-- 改版相簿 -->
-<div id="album" class="album" style="display: none;">
-  <div class="album-container">
-    <div class="slide"><img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg"></div>
-    <div class="slide"><img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg"></div>
+  <!-- 魔術方塊 -->
+  <div class="scene" onclick="openAlbum()">
+    <div class="face front"><img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg"></div>
+    <div class="face back"><img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg"></div>
+    <div class="face right"><img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg"></div>
+    <div class="face left"><img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg"></div>
+    <div class="face top"><img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg"></div>
+    <div class="face bottom"><img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg"></div>
   </div>
-</div>
 
-<style>
-  .album {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: #fff;
-    z-index: 1000;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  <!-- 相簿頁 -->
+  <div id="album" class="album">
+    <div class="album-container">
+      <div class="slide"><img src="https://i.postimg.cc/sDjzv6Yg/S-41213960-0.jpg"></div>
+      <div class="slide"><img src="https://i.postimg.cc/HWSZ96Gx/S-41213961-0.jpg"></div>
+      <div class="slide"><img src="https://i.postimg.cc/SKpDx59Z/S-41213962-0.jpg"></div>
+      <div class="slide"><img src="https://i.postimg.cc/GtNjwSrx/S-41213963-0.jpg"></div>
+      <div class="slide"><img src="https://i.postimg.cc/ncfLhGzd/S-41213964.jpg"></div>
+      <div class="slide"><img src="https://i.postimg.cc/y8c0LCY7/S-41213970.jpg"></div>
+    </div>
+  </div>
 
-  .album-container {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
-    height: 100%;
-  }
-
-  .slide {
-    flex: 0 0 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    scroll-snap-align: center;
-    padding: 10px;
-  }
-
-  .slide img {
-    max-width: 100%;
-    max-height: 90vh;
-    object-fit: contain;
-  }
-</style>
-
-<script>
-  function openAlbum() {
-    document.querySelector('.scene').style.display = 'none'; // 隱藏方塊
-    document.getElementById('album').style.display = 'flex';
-  }
-</script>
+  <script>
+    function openAlbum() {
+      document.querySelector('.scene').style.display = 'none';
+      document.getElementById('album').style.display = 'flex';
+      document.body.style.background = '#fff';
+    }
+  </script>
+</body>
+</html>
